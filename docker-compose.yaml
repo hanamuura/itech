@@ -1,0 +1,21 @@
+version: '3.10'
+
+services:
+  app:
+    build: ./backend
+    container_name: intechhub-backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15.5
+    container_name: itechhub-db
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "itechhub_db"

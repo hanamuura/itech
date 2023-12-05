@@ -1,0 +1,11 @@
+{
+  "postgres": {
+    "name": "db",
+    "port": "5432",
+    "password": "postgres",
+    "host": "db",
+    "engine": "django.db.backends.postgresql",
+    "user": "postgres"
+  },
+  "allowed_hosts": "*"
+}
