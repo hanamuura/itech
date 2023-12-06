@@ -1,17 +1,17 @@
 from django.db import models
-from backend.common.models import TechAndSolution, Meta
 
 
+# точность
 class Course(models.Model):
     name = models.CharField(max_length=255)
-    discount = models.FloatField()
+    discount = models.FloatField(null=True)
     price = models.FloatField()
-    description = models.TextField()
+    block_content = models.JSONField()
 
-    image = models.ForeignKey('common.Image', on_delete=models.CASCADE)
-    meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE)
+    image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='images')
+    meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE, related_name='meta')
 
-    tech_and_solution = models.ManyToManyField(TechAndSolution)
+    tech_and_solution = models.ManyToManyField('common.TechAndSolution', related_name='tech_and_solutions')
 
     class Meta:
         db_table = 'course'
@@ -19,14 +19,14 @@ class Course(models.Model):
 
 class Promotion(models.Model):
     name = models.CharField(max_length=255)
-    time_start = models.DateTimeField()
-    time_end = models.DateTimeField()
-    description = models.TextField()
+    dt_start = models.DateTimeField()
+    dt_end = models.DateTimeField()
+    block_content = models.JSONField()
 
-    image = models.ForeignKey('common.Image', on_delete=models.CASCADE)
-    meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE)
+    image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='images')
+    meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE, related_name='meta')
 
-    course = models.ManyToManyField(Course)
+    course = models.ManyToManyField('academy.Course', related_name='courses')
 
     class Meta:
         db_table = 'promotion'

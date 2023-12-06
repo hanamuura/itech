@@ -14,7 +14,7 @@ class Meta(models.Model):
     description = models.TextField(null=True)
     h1_title = models.CharField(max_length=225, null=True)
 
-    seo_image = models.ForeignKey('common.Image', on_delete=models.CASCADE)
+    seo_image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='images')
 
     class Meta:
         db_table = 'meta'
@@ -23,7 +23,7 @@ class Meta(models.Model):
 class TechAndSolution(models.Model):
     name = models.CharField(max_length=255)
 
-    image = models.ForeignKey('common.Image', on_delete=models.CASCADE)
+    image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='images')
 
     class Meta:
         db_table = 'tech_and_solution'
