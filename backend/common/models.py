@@ -14,16 +14,16 @@ class Meta(models.Model):
     description = models.TextField(null=True)
     h1_title = models.CharField(max_length=225, null=True)
 
-    seo_image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='images')
+    seo_image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='meta_image')
 
     class Meta:
         db_table = 'meta'
 
 
-class TechAndSolution(models.Model):
+class Technology(models.Model):
     name = models.CharField(max_length=255)
 
-    image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='images')
+    image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='technology_image')
 
     class Meta:
-        db_table = 'tech_and_solution'
+        db_table = 'technology'
