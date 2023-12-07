@@ -3,7 +3,7 @@ from django.db import models
 
 class Company(models.Model):
     name = models.CharField(max_length=255)
-    block_content = models.JSONField(default={}, null=False)
+    block_content = models.JSONField(default=dict, null=False)
 
     image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='company_image')
 
@@ -13,11 +13,11 @@ class Company(models.Model):
 
 class CompanyCase(models.Model):
     title = models.CharField(max_length=255)
-    block_content = models.JSONField(default={}, null=False)
+    block_content = models.JSONField(default=dict, null=False)
 
     order_number = models.PositiveIntegerField(default=1, null=False)
 
-    company = models.OneToOneField('itechhub.Company', on_delete=models.CASCADE)
+    company = models.OneToOneField('company.Company', on_delete=models.CASCADE)
 
     image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='company_case_image')
     meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE, related_name='company_case_image')
@@ -31,7 +31,7 @@ class CompanyCase(models.Model):
 class CompanyService(models.Model):
     name = models.CharField(max_length=255)
     order_number = models.PositiveIntegerField(default=1, null=False)
-    block_content = models.JSONField(default={}, null=False)
+    block_content = models.JSONField(default=dict, null=False)
 
     image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='company_service_image')
 

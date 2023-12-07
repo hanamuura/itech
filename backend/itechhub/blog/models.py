@@ -3,7 +3,7 @@ from django.db import models
 
 class Blog(models.Model):
     name = models.CharField(max_length=255)
-    block_content = models.JSONField(default={}, null=False)
+    block_content = models.JSONField(default=dict, null=False)
 
     class Meta:
         abstract = True

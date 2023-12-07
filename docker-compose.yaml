@@ -15,7 +15,9 @@ services:
   db:
     image: postgres:15.5
     container_name: itechhub-db
+    ports:
+      - "5436:5432"
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
-      POSTGRES_DB: "itechhub_db"
+      POSTGRES_DB: "zxc"

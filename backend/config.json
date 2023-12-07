@@ -1,6 +1,6 @@
 {
   "postgres": {
-    "name": "db",
+    "name": "zxc",
     "port": "5432",
     "password": "postgres",
     "host": "db",
