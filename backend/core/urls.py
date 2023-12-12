@@ -7,7 +7,7 @@ Examples:
 Function views
     1. Add an import:  from my_app import views
     2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
+Class-based viewsSS
     1. Add an import:  from other_app.views import Home
     2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
 Including another URLconf
@@ -15,15 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from common.views import index
-from itechhub.company.views import get_company_services, get_company_service, get_company_cases, get_company_case
+from itechhub.company.views import *
 from itechhub.views import get_employees
+from academy.views import *
+from academy.blog.views import *
 
 urlpatterns = [
-    path('test/<int:question_id>', index),
     path('technological-services', get_company_services),
     path('technological-services/<int:service_id>', get_company_service),
     path('cases', get_company_cases),
     path('cases/<int:case_id>', get_company_case),
-    path('our-team', get_employees)
+    path('our-team', get_employees),
+    path('academy/course', get_academy_courses),
+    path('academy/course/<int:course_id>', get_academy_course),
+    path('academy/blog', get_blogs),
+    path('academy/blog/<str:category>', get_category_blogs),
 ]

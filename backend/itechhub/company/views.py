@@ -11,6 +11,7 @@ def get_company_services(request):
     company_services = list(CompanyService.objects.all())
     paginator = Paginator(company_services, 2)
     page_num = request.GET.get('page')
+    print(page_num)
     data = []
     for service in paginator.get_page(page_num).object_list:
         service_object = {
@@ -26,8 +27,7 @@ def get_company_services(request):
 def get_company_service(request, service_id, **kwargs):
     if CompanyService.objects.filter(id=service_id).exists():
         return JsonResponse(CompanyService.objects.filter(id=service_id).values()[0], status=200)
-    else:
-        raise Http404
+    raise Http404
 
 
 def get_company_cases(request):
