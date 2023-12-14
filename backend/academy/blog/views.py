@@ -21,6 +21,28 @@ def get_blogs(request):
     return JsonResponse({'result': data}, status=200)
 
 
+@require_http_methods(["GET"])
 def get_category_blogs(request, category):
-    category = BlogCategory.objects.filter(name=category)
-    return HttpResponse(category.values('name'))
+    blog_category = BlogCategory.objects.filter(name=category).first()
+    posts = list(blog_category.blog_post_category.all())
+    paginator = Paginator(posts, 2)
+    page_num = request.GET.get('page')
+    data = []
+    for post in paginator.get_page(page_num):
+        post_obj = {
+            'name': post.name,
+            'block_content': post.block_content,
+            'image_id': post.image_id,
+            'meta_id': post.meta_id,
+        }
+        data.append(post_obj)
+    return JsonResponse({'result': data}, status=200)
+
+
+@require_http_methods("GET")
+def get_blog(request, category, blogpost_id):
+    blog_category = BlogCategory.objects.filter(name=category).first()
+    post = blog_category.blog_post_category.filter(id=blogpost_id)
+    if post.exists():
+        return JsonResponse(post.values()[0], status=200)
+    raise Http404

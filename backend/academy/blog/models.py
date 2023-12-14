@@ -12,6 +12,7 @@ class Blog(models.Model):
 class BlogPost(Blog):
     image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='blog_post_image')
     meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE, related_name='blog_post_meta')
+    category = models.ManyToManyField('blog.BlogCategory', related_name='blog_post_category')
 
     class Meta:
         db_table = 'blog_post'

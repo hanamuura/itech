@@ -30,4 +30,8 @@ urlpatterns = [
     path('academy/course/<int:course_id>', get_academy_course),
     path('academy/blog', get_blogs),
     path('academy/blog/<str:category>', get_category_blogs),
+    path('academy/promotion', get_academy_promotions),
+    path('academy/promotion/<int:promotion_id>', get_academy_promotion),
+    path('company/<int:company_id>', get_company),
+    path('academy/blog/<str:category>/<int:blogpost_id>', get_blog)
 ]

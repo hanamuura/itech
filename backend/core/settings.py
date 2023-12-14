@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'auth',
     'common',
     'itechhub',
-    'itechhub.company'
+    'itechhub.company',
+    'academy.blog',
 ]
 
 # 'django.contrib.messages.middleware.MessageMiddleware',
