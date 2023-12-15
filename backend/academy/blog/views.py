@@ -24,18 +24,21 @@ def get_blogs(request):
 @require_http_methods(["GET"])
 def get_category_blogs(request, category):
     blog_category = BlogCategory.objects.filter(name=category).first()
-    posts = list(blog_category.blog_post_category.all())
-    paginator = Paginator(posts, 2)
+    paginator = Paginator(blog_category.blog_post_category.all(), 10)
+    zxc = BlogPost.objects.filter(category__name=category).all()
+    print(zxc)
     page_num = request.GET.get('page')
     data = []
     for post in paginator.get_page(page_num):
         post_obj = {
+            'id': post.id,
             'name': post.name,
             'block_content': post.block_content,
             'image_id': post.image_id,
             'meta_id': post.meta_id,
         }
         data.append(post_obj)
+
     return JsonResponse({'result': data}, status=200)
 
 

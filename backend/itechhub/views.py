@@ -5,6 +5,4 @@ from django.http import JsonResponse
 
 @require_http_methods(["GET"])
 def get_employees(request):
-    return JsonResponse({'result': list(
-            Employee.objects.all().values('full_name', 'position', 'career_summary', 'image_id'))},
-        status=200)
+    return JsonResponse({})

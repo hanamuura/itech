@@ -6,6 +6,7 @@ class Course(models.Model):
     discount = models.DecimalField(decimal_places=2, max_digits=10, null=False)
     price = models.DecimalField(decimal_places=2, max_digits=10, null=False)
     block_content = models.JSONField(default=dict, null=False)
+    slag = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
 
     image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='course_image')
     meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE, related_name='course_meta')
@@ -22,6 +23,7 @@ class Promotion(models.Model):
     dt_start = models.DateTimeField()
     dt_end = models.DateTimeField()
     block_content = models.JSONField(default=dict, null=False)
+    slug = models.SlugField(max_length=255, unique=True)
 
     image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='promotion_image')
     meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE, related_name='promotion_meta')

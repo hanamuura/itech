@@ -14,6 +14,7 @@ class Company(models.Model):
 class CompanyCase(models.Model):
     title = models.CharField(max_length=255)
     block_content = models.JSONField(default=dict, null=False)
+    slag = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
 
     order_number = models.PositiveIntegerField(default=1, null=False)
 
@@ -32,6 +33,7 @@ class CompanyService(models.Model):
     name = models.CharField(max_length=255)
     order_number = models.PositiveIntegerField(default=1, null=False)
     block_content = models.JSONField(default=dict, null=False)
+    slug = models.SlugField(max_length=255, unique=True)
 
     image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='company_service_image')
 

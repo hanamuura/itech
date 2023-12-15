@@ -13,6 +13,7 @@ class BlogPost(Blog):
     image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='blog_post_image')
     meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE, related_name='blog_post_meta')
     category = models.ManyToManyField('blog.BlogCategory', related_name='blog_post_category')
+    slug = models.SlugField(max_length=255, unique=True)
 
     class Meta:
         db_table = 'blog_post'
@@ -21,6 +22,7 @@ class BlogPost(Blog):
 class BlogCategory(Blog):
     image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='blog_category_image')
     meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE, related_name='blog_category_meta')
+    slug = models.SlugField(max_length=255, unique=True)
 
     class Meta:
         db_table = 'blog_category'
