@@ -1,52 +1,43 @@
+import json
+from dataclasses import asdict
 from django.http import JsonResponse, Http404
 from django.views.decorators.http import require_http_methods
 from .models import *
 from django.core.paginator import Paginator
+from academy.repositories import PromotionRepository, CourseRepository
+from .schemas import PromotionSchema, CourseSchema
 
 
 @require_http_methods(["GET"])
 def get_academy_courses(request):
-    courses = list(Course.objects.all())
+    course_repo = CourseRepository()
+    courses = course_repo.get_values_list()
     paginator = Paginator(courses, 2)
     page_num = request.GET.get('page')
-    data = []
-    for course in paginator.get_page(page_num).object_list:
-        course_object = {
-            'name': course.name,
-            'discount': course.discount,
-            'price': course.price,
-            'block_content': course.block_content,
-            'image_id': course.image_id
-        }
-        data.append(course_object)
+    data = [CourseSchema.model_validate(schema).model_dump() for schema in paginator.get_page(page_num)]
     return JsonResponse({"result": data})
 
 
 @require_http_methods(["GET"])
 def get_academy_course(request, course_id):
-    course = Course.objects.filter(id=course_id)
+    course_repo = CourseRepository()
+    course = course_repo.get_all().filter(id=course_id)
+    print(course)
     if course.exists():
-        return JsonResponse(course.values()[0], status=200)
+        course_schema = CourseSchema.model_validate(course).model_loads()
+        print(course_schema)
+        return JsonResponse(CourseSchema.model_validate(course).model_dump(), status=200)
     raise Http404
 
 
 @require_http_methods(["GET"])
 def get_academy_promotions(request):
-    promotions = list(Promotion.objects.all())
+    promotion_repo = PromotionRepository()
+    promotions = promotion_repo.get_values_list()
     paginator = Paginator(promotions, 2)
     page_num = request.GET.get('page')
-    data = []
-    for promotion in paginator.get_page(page_num):
-        promo_obj = {
-            'name': promotion.name,
-            'block_content': promotion.block_content,
-            'dt_start': promotion.dt_start,
-            'dt_end': promotion.dt_end,
-            'image_id': promotion.image_id,
-            'meta_id': promotion.meta_id
-        }
-        data.append(promo_obj)
-    return JsonResponse({'result': data}, status=200)
+    data = [PromotionSchema.model_validate(promotion) for promotion in paginator.get_page(page_num)]
+    return JsonResponse({'result': list(data)}, status=200)
 
 
 @require_http_methods(["GET"])
