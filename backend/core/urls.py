@@ -15,6 +15,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
+
+from auth.admin.admin_promotions.views import AdminPromotionsView
 from itechhub.company.views import *
 from itechhub.views import get_employees
 from academy.views import *
@@ -39,5 +41,7 @@ urlpatterns = [
     path('academy/blog/<str:category>/<int:blogpost_id>', get_blog),
 
     path('company/<int:company_id>', get_company),
+
+    path('admin/promotion', AdminPromotionsView.as_view())
 ]
 

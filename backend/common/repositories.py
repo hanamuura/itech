@@ -5,10 +5,11 @@ from django.forms import model_to_dict
 class BaseRepository:
     model = None
 
-    def __init__(self):
+    def __init__(self, instance):
         if self.model is None:
             raise NotImplementedError
         self.base_qs = self.model.objects
+        self.instance = instance
 
     def get_values(self, *values: str) -> QuerySet[tuple]:
         return self.base_qs.all().values(*values)
@@ -18,3 +19,6 @@ class BaseRepository:
 
     def get_all(self):
         return self.base_qs.all()
+
+    def save_model(self):
+        self.instance.save()
