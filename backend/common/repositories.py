@@ -5,7 +5,7 @@ from django.forms import model_to_dict
 class BaseRepository:
     model = None
 
-    def __init__(self, instance):
+    def __init__(self, instance=None):
         if self.model is None:
             raise NotImplementedError
         self.base_qs = self.model.objects

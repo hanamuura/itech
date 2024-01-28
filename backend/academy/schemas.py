@@ -12,6 +12,6 @@ class CourseSchema(Schema):
 
 class PromotionSchema(Schema):
     name: str
-    dt_start: datetime
-    dt_end: datetime
+    dt_start: datetime.datetime
+    dt_end: datetime.datetime
     block_content: dict

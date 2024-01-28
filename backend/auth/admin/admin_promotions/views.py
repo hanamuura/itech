@@ -1,5 +1,6 @@
 import json
 
+from django.http import JsonResponse
 from django.views import View
 
 from academy.models import Promotion
@@ -9,7 +10,7 @@ from academy.views import get_academy_promotions
 
 class AdminPromotionsView(View):
     def get(self, request):
-        return get_academy_promotions(request)
+        return JsonResponse({})
 
     def post(self, request):
         data = json.loads(request.body)

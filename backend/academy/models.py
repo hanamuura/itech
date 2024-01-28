@@ -1,4 +1,5 @@
 from django.db import models
+#on_delete action
 
 
 class Course(models.Model):
@@ -6,10 +7,10 @@ class Course(models.Model):
     discount = models.DecimalField(decimal_places=2, max_digits=10, null=False)
     price = models.DecimalField(decimal_places=2, max_digits=10, null=False)
     block_content = models.JSONField(default=dict, null=False)
-    slag = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
+    slag = models.SlugField(max_length=255, unique=True)
 
-    image = models.ForeignKey('common.Image', on_delete=models.CASCADE, related_name='course_image')
-    meta = models.ForeignKey('common.Meta', on_delete=models.CASCADE, related_name='course_meta')
+    image = models.ForeignKey('common.Image', on_delete=models.RESTRICT, related_name='course_image')
+    meta = models.ForeignKey('common.Meta', on_delete=models.RESTRICT, related_name='course_meta')
 
     tech_and_solution = models.ManyToManyField('common.Technology', related_name='course_technology')
 
