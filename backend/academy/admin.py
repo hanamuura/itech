@@ -27,6 +27,6 @@ class AdminCourse(View):
         try:
             CourseSchema.model_validate(data)
             Course.objects.create(**data)
-            return JsonResponse(data, status=200)
+            return JsonResponse(data, status=202)
         except ValidationError:
             return HttpResponse("Incorrect input data")
