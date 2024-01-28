@@ -10,4 +10,3 @@ class PromotionRepository(BaseRepository):
 
 class CourseRepository(BaseRepository):
     model = Course
-

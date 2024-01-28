@@ -22,12 +22,7 @@ def get_academy_course(request, course_id):
     course_qs: QuerySet = course_repo.get_all().filter(id=course_id)
     if course_qs.exists():
         course = course_qs.first()
-        return JsonResponse(CourseSchema(
-            name=course.name,
-            discount=course.discount,
-            price=course.price,
-            block_content=course.block_content
-        ).model_dump(), status=200)
+        return JsonResponse(CourseSchema.model_validate(course).model_dump(), status=200)
     raise Http404
 
 
@@ -37,12 +32,7 @@ def get_academy_promotions(request):
     promotions = promotion_repo.get_all()
     paginator = Paginator(promotions, 2)
     page_num = request.GET.get('page')
-    data = [PromotionSchema(
-        name=promotion.name,
-        dt_start=promotion.dt_start,
-        dt_end=promotion.dt_end,
-        block_content=promotion.block_content
-    ).model_dump() for promotion in paginator.get_page(page_num)]
+    data = [PromotionSchema.model_validate(promotion).model_dump() for promotion in paginator.get_page(page_num)]
     return JsonResponse({'result': data}, status=200)
 
 
@@ -52,10 +42,5 @@ def get_academy_promotion(request, promotion_id):
     promotion_qs = promotion_repo.get_all().filter(id=promotion_id)
     if promotion_qs.exists():
         promotion = promotion_qs.first()
-        return JsonResponse(PromotionSchema(
-            name=promotion.name,
-            dt_start=promotion.dt_start,
-            dt_end=promotion.dt_end,
-            block_content=promotion.block_content
-        ).model_dump(), status=200)
+        return JsonResponse(PromotionSchema.model_validate(promotion).model_dump(), status=200)
     raise Http404
