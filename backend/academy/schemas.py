@@ -1,5 +1,7 @@
 import datetime
 
+from pydantic import field_validator
+
 from common.schemas import Schema
 
 
