@@ -10,3 +10,17 @@ class Schema(BaseModel):
         json_encoders = {
             datetime: lambda d: d.isoformat
         }
+
+
+class ImageSchema(Schema):
+    path: str
+
+
+class MetaSchema(Schema):
+    title: str
+    description: str
+    h1_title: str
+
+
+class TechnologySchema(Schema):
+    name: str

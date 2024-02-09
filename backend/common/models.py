@@ -3,7 +3,6 @@ from django.db import models
 
 class Image(models.Model):
     path = models.CharField(max_length=255, null=False)
-    # hash =
 
     class Meta:
         db_table = 'image'

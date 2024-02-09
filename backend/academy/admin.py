@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import JsonResponse, Http404, HttpResponse
 from django.views import View
 import json
@@ -7,26 +8,70 @@ from pydantic import ValidationError
 from academy.models import Course
 from academy.repositories import CourseRepository
 from academy.schemas import CourseSchema, PromotionSchema
+from common.models import Image, Technology
+from common.schemas import ImageSchema, TechnologySchema, MetaSchema
 
 
 class AdminCourse(View):
     @classmethod
     def get(cls, request):
-        course_repo = CourseRepository().get_all()
+        course_repo = CourseRepository()
+        courses = course_repo.get_all()
+        paginator = Paginator(courses, 2)
+        page_num = request.GET.get('page')
         data = []
-        for course in course_repo:
-            res = CourseSchema.model_validate(course).model_dump()
-            items = [PromotionSchema.model_validate(promotion).model_dump() for promotion in course.promotion_courses.all()]
-            res['promotions'] = items
-            data.append(res)
-        return JsonResponse({'result': data}, status=200)
+        for model in paginator.get_page(page_num).object_list:
+            schema = CourseSchema.model_validate(model).model_dump()
+            schema['image'] = ImageSchema.model_validate(model.image).model_dump()
+            schema['meta'] = MetaSchema.model_validate(model.meta).model_dump()
+            schema['tech_and_solution'] = [TechnologySchema.model_validate(tech).model_dump() for tech in
+                                           model.tech_and_solution.all()]
+            data.append(schema)
+        return JsonResponse({"result": data})
 
     @classmethod
     def post(cls, request):
         data = json.loads(request.body)
         try:
-            CourseSchema.model_validate(data)
-            Course.objects.create(**data)
-            return JsonResponse(data, status=202)
+            image = data['image']
+            technologies = data['tech_and_solution']
+            technology_images = [tech['image'] for tech in technologies]
+
+            course_schema = CourseSchema.model_validate(data).model_dump()
+            technologies_schemas = [TechnologySchema.model_validate(tech).model_dump() for tech in technologies]
+            technology_images_schemas = [ImageSchema.model_validate(image).model_dump() for image in technology_images]
+
+            created_images = [Image.objects.create(**img) for img in technology_images_schemas]
+            for i in range(len(created_images)):
+                technologies_schemas[i]['image_id'] = created_images[i].id
+            created_technologies = [Technology.objects.create(**tech) for tech in technologies_schemas]
+            created_image = Image.objects.create(**image)
+            course_schema['image_id'] = created_image.id
+            course_schema['meta_id'] = 1
+            created_course: Course = Course.objects.create(**course_schema)
+            created_course.tech_and_solution.add(*created_technologies)
+
+            return JsonResponse(data, status=200)
         except ValidationError:
-            return HttpResponse("Incorrect input data")
+            return HttpResponse("Incorrect input data", status=400)
+
+
+class AdminSingleCourse(View):
+    @classmethod
+    def get(cls, request, course_id):
+        repo = CourseRepository()
+        course = repo.get_all().filter(id=course_id).first()
+        course_as_dict = CourseSchema.model_validate(course).model_dump()
+        return JsonResponse(course_as_dict, status=200)
+
+    @classmethod
+    def patch(cls, request, course_id):
+        repo = CourseRepository()
+        data = json.loads(request.body)
+        try:
+            new_course = CourseSchema.model_validate(data).model_dump()
+            old_course = repo.get_single(id=course_id)
+            print(old_course)
+            return HttpResponse("work")
+        except ValidationError:
+            return HttpResponse("Incorrect input data", status=403)
