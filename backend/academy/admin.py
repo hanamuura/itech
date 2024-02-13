@@ -8,6 +8,7 @@ from pydantic import ValidationError
 from academy.models import Course
 from academy.repositories import CourseRepository
 from academy.schemas import CourseSchema, PromotionSchema
+from academy.service import CourseService
 from common.models import Image, Technology
 from common.schemas import ImageSchema, TechnologySchema, MetaSchema
 
@@ -59,19 +60,21 @@ class AdminCourse(View):
 class AdminSingleCourse(View):
     @classmethod
     def get(cls, request, course_id):
-        repo = CourseRepository()
-        course = repo.get_all().filter(id=course_id).first()
+        course_repo = CourseRepository()
+        course = course_repo.get_single(id=course_id)
+        if course is None:
+            return JsonResponse({}, status=400)
         course_as_dict = CourseSchema.model_validate(course).model_dump()
+        course_as_dict['image'] = ImageSchema.model_validate(course.image).model_dump()
+        course_as_dict['meta'] = MetaSchema.model_validate(course.meta).model_dump()
+        course_as_dict['tech_and_solutions'] = [TechnologySchema.model_validate(tech).model_dump() for tech in
+                                                course.tech_and_solution.all()]
         return JsonResponse(course_as_dict, status=200)
 
     @classmethod
     def patch(cls, request, course_id):
-        repo = CourseRepository()
         data = json.loads(request.body)
-        try:
-            new_course = CourseSchema.model_validate(data).model_dump()
-            old_course = repo.get_single(id=course_id)
-            print(old_course)
-            return HttpResponse("work")
-        except ValidationError:
-            return HttpResponse("Incorrect input data", status=403)
+        new_data = CourseService().patch(data, course_id)
+        if new_data == {}:
+            return JsonResponse({'error': 'ValidationError'}, status=400)
+        return JsonResponse(new_data, status=200)

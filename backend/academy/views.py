@@ -2,8 +2,10 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator
 from academy.repositories import PromotionRepository, CourseRepository
+from common.repositories import ImageRepository
 from common.schemas import ImageSchema, MetaSchema, TechnologySchema
 from .schemas import PromotionSchema, CourseSchema
+from .service import CourseService
 
 
 @require_http_methods(["GET"])
@@ -65,3 +67,11 @@ def get_academy_promotion(request, promotion_id):
     promotion_schema['courses'] = [CourseSchema.model_validate(course).model_dump() for course in
                                    promotion.course.all()]
     return JsonResponse(promotion_schema, status=200)
+
+
+@require_http_methods(["GET"])
+def test(req):
+    repo = ImageRepository()
+    image_string = CourseService().encode_image()
+    data = {'image': image_string}
+    return JsonResponse(data, status=200)

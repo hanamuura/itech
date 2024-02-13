@@ -44,6 +44,6 @@ urlpatterns = [
 
     path('admin/course', AdminCourse.as_view()),
     path('admin/course/<int:course_id>', AdminSingleCourse.as_view()),
-
+    path('test', test)
 ]
 
