@@ -10,6 +10,7 @@ class CourseSchema(Schema):
     discount: float
     price: float
     block_content: dict
+    slag: str
 
 
 class PromotionSchema(Schema):
