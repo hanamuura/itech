@@ -8,7 +8,7 @@ from academy.schemas import CourseSchema
 
 
 class CourseService:
-    repository = CourseRepository()
+    repository = CourseRepository
 
     @classmethod
     def encode_image(cls):
@@ -18,7 +18,7 @@ class CourseService:
 
     @classmethod
     def patch(cls, new_data: dict, course_id: int):
-        old_course: Course = cls.repository.get_single(id=course_id)
+        old_course: Course = cls.repository().get_single(id=course_id)
         old_course.name = new_data.get('name', old_course.name)
         old_course.discount = new_data.get('discount', old_course.discount)
         old_course.price = new_data.get('price', old_course.price)
@@ -31,3 +31,9 @@ class CourseService:
             return schema
         except ValidationError:
             return {}
+
+    @classmethod
+    def courses(cls):
+        academy_courses = cls.repository().get_all()
+        dumped_courses = [CourseSchema.model_dump(course) for course in academy_courses]
+        return dumped_courses

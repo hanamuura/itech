@@ -7,8 +7,11 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend:/code
+      - ./media:/media
     ports:
       - "8000:8000"
+    networks:
+      - intechhub
     depends_on:
       - db
 
@@ -21,3 +24,28 @@ services:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_DB: "intechhub"
+    networks:
+      - intechhub
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./.docker/configs/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./media:/media
+    networks:
+      - intechhub
+    depends_on:
+      - app
+
+networks:
+  intechhub:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local

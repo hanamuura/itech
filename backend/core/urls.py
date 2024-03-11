@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.urls import path
 
-from academy.admin import AdminCourse, AdminSingleCourse
 from itechhub.company.views import *
 from itechhub.views import get_employees
 from academy.views import *
@@ -42,8 +41,6 @@ urlpatterns = [
 
     path('company/<int:company_id>', get_company),
 
-    path('admin/course', AdminCourse.as_view()),
-    path('admin/course/<int:course_id>', AdminSingleCourse.as_view()),
-    path('test', test)
+    path('', test)
 ]
 

@@ -71,7 +71,4 @@ def get_academy_promotion(request, promotion_id):
 
 @require_http_methods(["GET"])
 def test(req):
-    repo = ImageRepository()
-    image_string = CourseService().encode_image()
-    data = {'image': image_string}
-    return JsonResponse(data, status=200)
+    return JsonResponse({'string': 'test'}, status=200)
